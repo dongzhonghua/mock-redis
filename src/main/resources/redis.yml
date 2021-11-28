@@ -1,0 +1,5 @@
+aof_data_dir: ./aof_data_dir/
+appendonly: 'yes'
+ip: 127.0.0.1
+port: 6379
+tcp_keepalive: 'no'

@@ -1,16 +1,32 @@
 package top.dzhh.protocol.resp;
 
+import java.nio.charset.StandardCharsets;
+
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
 import top.dzhh.protocol.AbstractResp;
 import top.dzhh.protocol.Resp;
+import top.dzhh.protocol.RespConstants;
 
 /**
  * @author dongzhonghua
  * Created on 2021-11-25
  */
-public class DefaultResp extends AbstractResp {
+public class DefaultResp<T> extends AbstractResp<String> {
     @Override
-    public Resp decode(ByteBuf buffer) {
-        throw new RuntimeException("不支持的命令类型");
+    public Resp<String> decode(ByteBuf buffer) {
+        return new LineString<String>("unsupported protocol");
+    }
+
+    @Override
+    public void encode(ChannelHandlerContext channelHandlerContext, Resp<String> resp, ByteBuf byteBuf) {
+        try {
+            byteBuf.writeByte(RespConstants.MINUS_BYTE);
+            byteBuf.writeBytes(resp.getValue().getBytes(StandardCharsets.UTF_8));
+            byteBuf.writeBytes(RespConstants.CRLF);
+        } catch (Exception e) {
+            channelHandlerContext.close();
+            e.printStackTrace();
+        }
     }
 }

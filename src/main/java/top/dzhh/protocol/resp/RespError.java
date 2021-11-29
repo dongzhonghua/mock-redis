@@ -19,6 +19,10 @@ public class RespError<T> extends LineString<String> {
         super(value);
     }
 
+    public RespError() {
+
+    }
+
     @Override
     public void encode(ChannelHandlerContext channelHandlerContext, Resp<String> resp, ByteBuf byteBuf) {
         try {

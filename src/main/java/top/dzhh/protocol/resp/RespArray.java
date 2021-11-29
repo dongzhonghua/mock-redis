@@ -23,6 +23,10 @@ public class RespArray<T> extends AbstractResp<Resp<?>[]> {
         super.setValue(array);
     }
 
+    public RespArray() {
+
+    }
+
     @Override
     public Resp<Resp<?>[]> decode(ByteBuf buffer) {
         int endIndex = getEndIndex(buffer);
@@ -37,15 +41,13 @@ public class RespArray<T> extends AbstractResp<Resp<?>[]> {
         }
         // Array Empty List
         if (RespConstants.ZERO.equals(len)) {
-            return new RespArray<AbstractResp<?>>(new Resp[0]);
+            return this.setValue(new Resp[0]);
         }
         Resp<?>[] res = new Resp[Math.toIntExact(len)];
         for (int i = 0; i < len; i++) {
             res[i] = RespCodecFactory.decode(buffer);
         }
-        return new RespArray<AbstractResp<?>>(res);
-
-
+        return this.setValue(res);
     }
 
     @Override

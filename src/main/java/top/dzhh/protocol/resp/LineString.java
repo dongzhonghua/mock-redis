@@ -17,9 +17,13 @@ public class LineString<T> extends AbstractResp<String> {
         super.setValue(value);
     }
 
+    public LineString() {
+
+    }
+
     @Override
     public Resp<String> decode(ByteBuf buffer) {
-        return new LineString<String>(readLine(buffer));
+        return this.setValue(readLine(buffer));
     }
 
     @Override

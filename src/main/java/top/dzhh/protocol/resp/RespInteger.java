@@ -20,9 +20,13 @@ public class RespInteger<T> extends AbstractResp<Long> {
         super.setValue(value);
     }
 
+    public RespInteger() {
+
+    }
+
     @Override
     public Resp<Long> decode(ByteBuf buffer) {
-        return new RespInteger<Long>(readInteger(buffer));
+        return this.setValue(readInteger(buffer));
     }
 
     @Override

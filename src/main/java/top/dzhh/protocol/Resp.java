@@ -11,7 +11,8 @@ public class Resp<T> {
         return value;
     }
 
-    public void setValue(T value) {
+    public Resp<T> setValue(T value) {
         this.value = value;
+        return this;
     }
 }

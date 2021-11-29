@@ -1,6 +1,7 @@
 package top.dzhh.protocol;
 
 import java.util.Map;
+import java.util.function.Supplier;
 
 import com.google.common.collect.Maps;
 
@@ -22,20 +23,20 @@ import top.dzhh.protocol.resp.RespSimpleString;
 @Slf4j
 public class RespCodecFactory {
 
-    static final Map<RespType, AbstractResp<?>> DECODERS = Maps.newConcurrentMap();
-    private static final AbstractResp<?> DEFAULT_DECODER = new DefaultResp<>();
+    static final Map<RespType, Supplier<AbstractResp<?>>> DECODERS = Maps.newConcurrentMap();
+    private static final Supplier<AbstractResp<?>> DEFAULT_DECODER = DefaultResp::new;
 
     static {
-        DECODERS.put(RespType.SIMPLE_STRING, new RespSimpleString<String>(null));
-        DECODERS.put(RespType.ERROR, new RespError<String>(null));
-        DECODERS.put(RespType.INTEGER, new RespInteger<Long>(null));
-        DECODERS.put(RespType.BULK_STRING, new RespBulkString<String>(null));
-        DECODERS.put(RespType.RESP_ARRAY, new RespArray<Resp<AbstractResp<?>>[]>(null));
+        DECODERS.put(RespType.SIMPLE_STRING, RespSimpleString::new);
+        DECODERS.put(RespType.ERROR, RespError::new);
+        DECODERS.put(RespType.INTEGER, RespInteger::new);
+        DECODERS.put(RespType.BULK_STRING, RespBulkString::new);
+        DECODERS.put(RespType.RESP_ARRAY, RespArray::new);
     }
 
     // TODO: 2021/11/28 内联命令也应该实现成array的形式 http://redisdoc.com/topic/protocol.html
     public static Resp<?> decode(ByteBuf buffer) {
-        return DECODERS.getOrDefault(determineReplyType(buffer), DEFAULT_DECODER).decode(buffer);
+        return DECODERS.getOrDefault(determineReplyType(buffer), DEFAULT_DECODER).get().decode(buffer);
     }
 
     private static RespType determineReplyType(ByteBuf buffer) {

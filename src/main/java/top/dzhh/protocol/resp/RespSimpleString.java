@@ -19,6 +19,10 @@ public class RespSimpleString<T> extends LineString<String> {
         super(value);
     }
 
+    public RespSimpleString() {
+
+    }
+
     @Override
     public void encode(ChannelHandlerContext channelHandlerContext, Resp<String> resp, ByteBuf byteBuf) {
         try {

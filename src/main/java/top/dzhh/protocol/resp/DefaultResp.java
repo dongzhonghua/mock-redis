@@ -4,7 +4,6 @@ import java.nio.charset.StandardCharsets;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import top.dzhh.protocol.AbstractResp;
 import top.dzhh.protocol.Resp;
 import top.dzhh.protocol.RespConstants;
 
@@ -12,10 +11,14 @@ import top.dzhh.protocol.RespConstants;
  * @author dongzhonghua
  * Created on 2021-11-25
  */
-public class DefaultResp<T> extends AbstractResp<String> {
+public class DefaultResp<T> extends LineString<String> {
+    public DefaultResp() {
+
+    }
+
     @Override
     public Resp<String> decode(ByteBuf buffer) {
-        return new LineString<String>("unsupported protocol");
+        return this.setValue("unsupported protocol");
     }
 
     @Override

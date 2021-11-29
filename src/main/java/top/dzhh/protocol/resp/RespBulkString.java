@@ -19,6 +19,10 @@ public class RespBulkString<T> extends AbstractResp<String> {
         super.setValue(value);
     }
 
+    public RespBulkString() {
+
+    }
+
     @Override
     public Resp<String> decode(ByteBuf buffer) {
         int endIndex = getEndIndex(buffer);
@@ -32,7 +36,7 @@ public class RespBulkString<T> extends AbstractResp<String> {
         }
         // Bulk Empty String
         if (RespConstants.ZERO.equals(len)) {
-            return new RespBulkString<String>(RespConstants.EMPTY_STRING);
+            return this.setValue(RespConstants.EMPTY_STRING);
         }
         if (buffer.readableBytes() < len + 2) {
             return null;
@@ -40,7 +44,7 @@ public class RespBulkString<T> extends AbstractResp<String> {
         if (getEndIndex(buffer) - endIndex - 2 != len) {
             throw new RuntimeException("协议解析出错，字符串长度有误");
         }
-        return new RespBulkString<String>(readLine(buffer));
+        return this.setValue(readLine(buffer));
     }
 
     @Override

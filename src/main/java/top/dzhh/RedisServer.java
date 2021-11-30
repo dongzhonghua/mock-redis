@@ -12,6 +12,7 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import lombok.extern.slf4j.Slf4j;
 import top.dzhh.redis.core.RedisCore;
+import top.dzhh.redis.core.RedisCoreImpl;
 
 /**
  * @author dongzhonghua
@@ -22,7 +23,7 @@ public class RedisServer {
     private final ServerBootstrap serverBootstrap = new ServerBootstrap();
     NioEventLoopGroup bossGroup = new NioEventLoopGroup();
     NioEventLoopGroup workerGroup = new NioEventLoopGroup();
-    private final RedisCore redisCore = new RedisCore();
+    private final RedisCore redisCore = new RedisCoreImpl();
 
     public RedisServer() {
     }

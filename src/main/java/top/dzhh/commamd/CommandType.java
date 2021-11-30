@@ -2,6 +2,7 @@ package top.dzhh.commamd;
 
 import java.util.function.Supplier;
 
+import top.dzhh.commamd.string.Get;
 import top.dzhh.commamd.string.Set;
 
 /**
@@ -11,19 +12,19 @@ import top.dzhh.commamd.string.Set;
 public enum CommandType {
     command(StartCommand::new),
     ping(Ping::new),
-
     set(Set::new),
+    get(Get::new),
 
 
     ;
 
-    private final Supplier<Command> supplier;
+    private final Supplier<RedisCommand> supplier;
 
-    CommandType(Supplier<Command> supplier) {
+    CommandType(Supplier<RedisCommand> supplier) {
         this.supplier = supplier;
     }
 
-    public Supplier<Command> getSupplier() {
+    public Supplier<RedisCommand> getSupplier() {
         return supplier;
     }
 }

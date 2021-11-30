@@ -9,7 +9,7 @@ import top.dzhh.redis.core.RedisCore;
  * @author dongzhonghua
  * Created on 2021-11-27
  */
-public class Ping implements Command {
+public class Ping implements RedisCommand {
     private Resp<?>[] array;
 
     @Override
@@ -23,7 +23,7 @@ public class Ping implements Command {
     }
 
     @Override
-    public void handle(ChannelHandlerContext ctx, RedisCore redisCore, Command command) {
+    public void handle(ChannelHandlerContext ctx, RedisCore redisCore, RedisCommand command) {
         if (array.length == 1) {
             ctx.writeAndFlush(new RespSimpleString<String>("PONG"));
         } else if (array.length > 1) {

@@ -15,6 +15,8 @@ import top.dzhh.protocol.RespConstants;
  */
 @Slf4j
 public class RespBulkString<T> extends AbstractResp<String> {
+    public static final RespBulkString<String> NULL_BULK_STRING = new RespBulkString<>(null);
+
     public RespBulkString(String value) {
         super.setValue(value);
     }
@@ -51,10 +53,9 @@ public class RespBulkString<T> extends AbstractResp<String> {
     public void encode(ChannelHandlerContext channelHandlerContext, Resp<String> resp, ByteBuf byteBuf) {
         byteBuf.writeByte(RespConstants.DOLLAR_BYTE);
         String value = resp.getValue();
-
         if (value == null) {
             byteBuf.writeByte(RespConstants.MINUS_BYTE);
-            byteBuf.writeByte(RespConstants.ZERO.byteValue());
+            byteBuf.writeByte('1');
             byteBuf.writeBytes(RespConstants.CRLF);
         } else if (value.getBytes(StandardCharsets.UTF_8).length == 0) {
             byteBuf.writeByte(RespConstants.ZERO.byteValue());

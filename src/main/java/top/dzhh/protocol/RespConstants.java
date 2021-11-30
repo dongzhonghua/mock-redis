@@ -21,6 +21,7 @@ public class RespConstants {
         public static final String EMPTY_STRING = "";
         public static final Long ZERO = 0L;
         public static final Long NEGATIVE_ONE = -1L;
+        public static final Long ONE = 1L;
         public static final byte CR = (byte) '\r';
         public static final byte LF = (byte) '\n';
         public static final byte[] CRLF = "\r\n".getBytes(ASCII);

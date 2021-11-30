@@ -8,12 +8,12 @@ import top.dzhh.redis.core.RedisCore;
  * @author dongzhonghua
  * Created on 2021-11-27
  */
-public interface Command {
+public interface RedisCommand {
 
     CommandType type();
 
     void setContent(Resp<?>[] array);
 
-    void handle(ChannelHandlerContext ctx, RedisCore redisCore, Command command);
+    void handle(ChannelHandlerContext ctx, RedisCore redisCore, RedisCommand command);
 
 }

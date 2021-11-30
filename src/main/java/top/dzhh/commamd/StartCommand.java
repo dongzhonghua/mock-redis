@@ -8,7 +8,7 @@ import top.dzhh.redis.core.RedisCore;
  * @author dongzhonghua
  * Created on 2021-11-27
  */
-public class StartCommand implements Command {
+public class StartCommand implements RedisCommand {
     @Override
     public CommandType type() {
         return CommandType.ping;
@@ -20,7 +20,7 @@ public class StartCommand implements Command {
     }
 
     @Override
-    public void handle(ChannelHandlerContext ctx, RedisCore redisCore, Command command) {
+    public void handle(ChannelHandlerContext ctx, RedisCore redisCore, RedisCommand command) {
         ctx.close();
     }
 }

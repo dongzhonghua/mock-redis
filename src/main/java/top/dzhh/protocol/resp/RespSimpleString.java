@@ -14,6 +14,7 @@ import top.dzhh.protocol.RespConstants;
  */
 @Slf4j
 public class RespSimpleString<T> extends LineString<String> {
+    public static final RespSimpleString<String> OK_SIMPLE_STRING = new RespSimpleString<>("OK");
 
     public RespSimpleString(String value) {
         super(value);

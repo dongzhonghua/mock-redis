@@ -4,8 +4,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import lombok.extern.slf4j.Slf4j;
-import top.dzhh.commamd.Command;
 import top.dzhh.commamd.CommandFactory;
+import top.dzhh.commamd.RedisCommand;
 import top.dzhh.protocol.Resp;
 import top.dzhh.protocol.RespCodecFactory;
 import top.dzhh.protocol.resp.RespArray;
@@ -33,7 +33,7 @@ public class CommandDecoder extends LengthFieldBasedFrameDecoder {
         }
         Resp<?> resp = RespCodecFactory.decode(in);
         log.info(String.valueOf(resp));
-        Command command = null;
+        RedisCommand command = null;
         if (!(resp instanceof RespArray)) {
             // 相当于可以跳过下面的handler，直接匹配传参的handler，也就是直接跳到了ResponseEncoder
             ctx.writeAndFlush(new RespError<String>("bad request"));

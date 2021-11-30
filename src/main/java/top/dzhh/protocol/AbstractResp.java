@@ -11,7 +11,6 @@ import io.netty.util.ByteProcessor;
  */
 public abstract class AbstractResp<T> extends Resp<T> implements RespCodec<T> {
 
-
     public abstract Resp<T> decode(ByteBuf buffer);
 
     public abstract void encode(ChannelHandlerContext channelHandlerContext, Resp<T> resp,

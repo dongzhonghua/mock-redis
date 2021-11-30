@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 
 import lombok.extern.slf4j.Slf4j;
 import top.dzhh.protocol.Resp;
+import top.dzhh.protocol.resp.RespArray;
 import top.dzhh.protocol.resp.RespBulkString;
 
 /**
@@ -14,7 +15,7 @@ import top.dzhh.protocol.resp.RespBulkString;
  */
 @Slf4j
 public class CommandFactory {
-    static Map<String, Supplier<Command>> map = new HashMap<>();
+    static Map<String, Supplier<RedisCommand>> map = new HashMap<>();
 
     static {
         for (CommandType each : CommandType.values()) {
@@ -22,17 +23,21 @@ public class CommandFactory {
         }
     }
 
-
-    public static Command getRespCommand(Resp<Resp<?>[]> resp) {
+    /**
+     * 返回一个redis请求对应的命令处理器
+     * @param resp 都是RespArray
+     * @return redis命令处理器，需要把请求内容set进去
+     */
+    public static RedisCommand getRespCommand(RespArray<Resp<?>[]> resp) {
         Resp<?>[] array = resp.getValue();
         String commandName = ((RespBulkString<String>) array[0]).getValue().toLowerCase();
-        Supplier<Command> supplier = map.get(commandName);
+        Supplier<RedisCommand> supplier = map.get(commandName);
         if (supplier == null) {
             log.info("不支持的命令：" + commandName);
             return null;
         } else {
             try {
-                Command command = supplier.get();
+                RedisCommand command = supplier.get();
                 command.setContent(array);
                 return command;
             } catch (Throwable e) {

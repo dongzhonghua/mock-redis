@@ -22,8 +22,8 @@ import top.dzhh.redis.core.RedisCore;
  */
 @Slf4j
 public class Hset implements RedisCommand {
-    private String key;
-    private List<Pair<String, String>> fields = new ArrayList<>();
+    protected String key;
+    protected List<Pair<String, String>> fields = new ArrayList<>();
 
     @Override
     public CommandType type() {
@@ -46,7 +46,7 @@ public class Hset implements RedisCommand {
         RedisData redisData = redisCore.get(key);
         if (redisData == null) {
             RedisHash redisHash = new RedisHash();
-            long count = fields.stream().map(f -> redisHash.put(f.getKey(), f.getValue())).count();
+            long count = fields.stream().map(f -> redisHash.put(f.getKey(), f.getValue())).mapToInt(a -> a).sum();
             redisCore.put(key, redisHash);
             ctx.writeAndFlush(new RespInteger<Long>(count));
         } else if (redisData instanceof RedisHash) {

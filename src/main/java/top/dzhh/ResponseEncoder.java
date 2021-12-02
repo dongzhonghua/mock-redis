@@ -16,7 +16,7 @@ public class ResponseEncoder extends MessageToByteEncoder<AbstractResp<?>> {
     protected void encode(ChannelHandlerContext channelHandlerContext, AbstractResp resp, ByteBuf byteBuf)
             throws Exception {
         log.info("--------response encoder------------");
-        log.info(String.valueOf(resp.getValue()));
+        log.info(String.valueOf(resp));
         resp.encode(channelHandlerContext, resp, byteBuf);
         log.info("--------请求结束，返回客户端-----------\n");
     }

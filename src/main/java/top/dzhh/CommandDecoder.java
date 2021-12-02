@@ -39,7 +39,7 @@ public class CommandDecoder extends LengthFieldBasedFrameDecoder {
             ctx.writeAndFlush(new RespError<String>("bad request"));
         } else {
             RespArray<Resp<?>[]> respArray = (RespArray<Resp<?>[]>) resp;
-            command = CommandFactory.getRespCommand(respArray);
+            command = CommandFactory.getRespCommand(respArray, ctx);
             if (command == null) {
                 ctx.writeAndFlush(new RespError<String>("unsupported command: " + (respArray).getValue()[0]));
             }

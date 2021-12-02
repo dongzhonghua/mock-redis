@@ -2,6 +2,8 @@ package top.dzhh.commamd;
 
 import java.util.function.Supplier;
 
+import top.dzhh.commamd.hash.Hget;
+import top.dzhh.commamd.hash.Hset;
 import top.dzhh.commamd.string.Get;
 import top.dzhh.commamd.string.Set;
 
@@ -16,7 +18,8 @@ public enum CommandType {
     get(Get::new),
 
 
-    ;
+    hset(Hset::new),
+    hget(Hget::new);
 
     private final Supplier<RedisCommand> supplier;
 

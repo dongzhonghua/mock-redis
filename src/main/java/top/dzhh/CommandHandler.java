@@ -22,6 +22,7 @@ public class CommandHandler extends SimpleChannelInboundHandler<RedisCommand> {
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, RedisCommand command) {
         log.info("--------command handler-------------");
+        log.info(command.type().name());
         try {
             command.handle(channelHandlerContext, redisCore, command);
         } catch (Exception e) {

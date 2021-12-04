@@ -6,6 +6,10 @@ import top.dzhh.commamd.hash.Hget;
 import top.dzhh.commamd.hash.Hmget;
 import top.dzhh.commamd.hash.Hmset;
 import top.dzhh.commamd.hash.Hset;
+import top.dzhh.commamd.list.Lindex;
+import top.dzhh.commamd.list.Lpush;
+import top.dzhh.commamd.list.Lrange;
+import top.dzhh.commamd.list.Rpush;
 import top.dzhh.commamd.string.Get;
 import top.dzhh.commamd.string.Set;
 
@@ -25,7 +29,10 @@ public enum CommandType {
     hget(Hget::new),
     hmget(Hmget::new),
 
-    ;
+    lpush(Lpush::new),
+    rpush(Rpush::new),
+    lindex(Lindex::new),
+    lrange(Lrange::new);
 
     private final Supplier<RedisCommand> supplier;
 

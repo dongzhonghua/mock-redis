@@ -10,6 +10,8 @@ import top.dzhh.commamd.list.Lindex;
 import top.dzhh.commamd.list.Lpush;
 import top.dzhh.commamd.list.Lrange;
 import top.dzhh.commamd.list.Rpush;
+import top.dzhh.commamd.set.Sadd;
+import top.dzhh.commamd.set.Sscan;
 import top.dzhh.commamd.string.Get;
 import top.dzhh.commamd.string.Set;
 
@@ -20,6 +22,7 @@ import top.dzhh.commamd.string.Set;
 public enum CommandType {
     command(StartCommand::new),
     ping(Ping::new),
+
     set(Set::new),
     get(Get::new),
 
@@ -32,7 +35,10 @@ public enum CommandType {
     lpush(Lpush::new),
     rpush(Rpush::new),
     lindex(Lindex::new),
-    lrange(Lrange::new);
+    lrange(Lrange::new),
+
+    sadd(Sadd::new),
+    sscan(Sscan::new);
 
     private final Supplier<RedisCommand> supplier;
 

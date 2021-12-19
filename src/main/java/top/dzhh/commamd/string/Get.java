@@ -20,7 +20,7 @@ public class Get implements RedisCommand {
 
     @Override
     public CommandType type() {
-        return CommandType.set;
+        return CommandType.get;
     }
 
     @Override
@@ -33,8 +33,8 @@ public class Get implements RedisCommand {
         RedisData redisData = redisCore.get(key);
         if (redisData == null) {
             ctx.writeAndFlush(NULL_BULK_STRING);
-        }
-        if (redisData instanceof RedisString) {
+            ctx.close();
+        } else if (redisData instanceof RedisString) {
             ctx.writeAndFlush(new RespBulkString<>(((RedisString) redisData).getValue()));
         } else {
             ctx.writeAndFlush(NULL_BULK_STRING);

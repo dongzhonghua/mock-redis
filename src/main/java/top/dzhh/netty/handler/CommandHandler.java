@@ -1,4 +1,4 @@
-package top.dzhh;
+package top.dzhh.netty.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

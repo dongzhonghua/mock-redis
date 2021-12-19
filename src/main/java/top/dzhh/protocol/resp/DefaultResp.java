@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
+import top.dzhh.protocol.AbstractResp;
 import top.dzhh.protocol.Resp;
 import top.dzhh.protocol.RespConstants;
 
@@ -11,7 +12,8 @@ import top.dzhh.protocol.RespConstants;
  * @author dongzhonghua
  * Created on 2021-11-25
  */
-public class DefaultResp<T> extends LineString<String> {
+public class DefaultResp<T> extends AbstractResp<String> {
+
     public DefaultResp() {
 
     }
@@ -31,5 +33,10 @@ public class DefaultResp<T> extends LineString<String> {
             channelHandlerContext.close();
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String toString() {
+        return this.value;
     }
 }

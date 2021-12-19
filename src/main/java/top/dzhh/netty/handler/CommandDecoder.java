@@ -1,4 +1,4 @@
-package top.dzhh;
+package top.dzhh.netty.handler;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -37,6 +37,7 @@ public class CommandDecoder extends LengthFieldBasedFrameDecoder {
         if (!(resp instanceof RespArray)) {
             // 相当于可以跳过下面的handler，直接匹配传参的handler，也就是直接跳到了ResponseEncoder
             ctx.writeAndFlush(new RespError<String>("bad request"));
+            ctx.close();
         } else {
             RespArray<Resp<?>[]> respArray = (RespArray<Resp<?>[]>) resp;
             command = CommandFactory.getRespCommand(respArray, ctx);

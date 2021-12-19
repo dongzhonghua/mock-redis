@@ -8,7 +8,6 @@ import com.google.common.collect.Maps;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import lombok.extern.slf4j.Slf4j;
-import top.dzhh.protocol.RespConstants.RespType;
 import top.dzhh.protocol.resp.DefaultResp;
 import top.dzhh.protocol.resp.RespArray;
 import top.dzhh.protocol.resp.RespBulkString;

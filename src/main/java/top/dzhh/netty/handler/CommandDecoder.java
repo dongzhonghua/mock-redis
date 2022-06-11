@@ -32,20 +32,16 @@ public class CommandDecoder extends LengthFieldBasedFrameDecoder {
         log.info("--------command decoder-------------");
 
         RedisClient client = RedisServer.getClientByChannel(ctx.channel());
-        boolean b = client.getBuf() == in;
-
-
-
+        in = client.getBuf();
         if (in.readableBytes() <= 0) {
             return null;
         }
         Resp<?> resp = RespCodecFactory.decode(in);
-        log.info(String.valueOf(resp));
+        log.info("命令和参数：{}", resp);
         RedisCommand command = null;
         if (!(resp instanceof RespArray)) {
             // 相当于可以跳过下面的handler，直接匹配传参的handler，也就是直接跳到了ResponseEncoder
             ctx.writeAndFlush(new RespError<String>("bad request"));
-            ctx.close();
         } else {
             RespArray<Resp<?>[]> respArray = (RespArray<Resp<?>[]>) resp;
             command = CommandFactory.getRespCommand(respArray, ctx);

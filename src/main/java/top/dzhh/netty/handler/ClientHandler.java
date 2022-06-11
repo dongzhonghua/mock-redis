@@ -42,7 +42,6 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         RedisClient client = RedisServer.getClientByChannel(ctx.channel());
         ByteBuf buf = (ByteBuf) msg;
         client.setBuf(buf);
-        System.out.println(buf.refCnt());
         ctx.fireChannelRead(buf);
     }
 }

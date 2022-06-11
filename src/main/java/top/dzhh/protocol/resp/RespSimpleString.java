@@ -34,7 +34,6 @@ public class RespSimpleString<T> extends AbstractResp<String> {
     public void encode(ChannelHandlerContext channelHandlerContext, Resp<String> resp, ByteBuf byteBuf) {
         try {
             byteBuf.writeByte(RespConstants.PLUS_BYTE);
-            log.info(this.value);
             byteBuf.writeBytes(this.value.getBytes(StandardCharsets.UTF_8));
             byteBuf.writeBytes(RespConstants.CRLF);
         } catch (Exception e) {

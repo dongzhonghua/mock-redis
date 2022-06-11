@@ -33,7 +33,6 @@ public class Get implements RedisCommand {
         RedisData redisData = redisDb.get(key);
         if (redisData == null) {
             ctx.writeAndFlush(NULL_BULK_STRING);
-            ctx.close();
         } else if (redisData instanceof RedisString) {
             ctx.writeAndFlush(new RespBulkString<>(((RedisString) redisData).getValue()));
         } else {

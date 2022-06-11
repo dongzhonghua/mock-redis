@@ -2,7 +2,8 @@ package top.dzhh.commamd;
 
 import io.netty.channel.ChannelHandlerContext;
 import top.dzhh.protocol.Resp;
-import top.dzhh.redis.core.RedisCore;
+import top.dzhh.protocol.resp.RespSimpleString;
+import top.dzhh.redis.core.RedisDb;
 
 /**
  * @author dongzhonghua
@@ -11,7 +12,7 @@ import top.dzhh.redis.core.RedisCore;
 public class StartCommand implements RedisCommand {
     @Override
     public CommandType type() {
-        return CommandType.ping;
+        return CommandType.command;
     }
 
     @Override
@@ -20,7 +21,7 @@ public class StartCommand implements RedisCommand {
     }
 
     @Override
-    public void handle(ChannelHandlerContext ctx, RedisCore redisCore, RedisCommand command) {
-        ctx.close();
+    public void handle(ChannelHandlerContext ctx, RedisDb redisDb, RedisCommand command) {
+        ctx.writeAndFlush(RespSimpleString.OK_SIMPLE_STRING);
     }
 }

@@ -9,7 +9,7 @@ import top.dzhh.datatype.RedisList;
 import top.dzhh.protocol.Resp;
 import top.dzhh.protocol.resp.RespBulkString;
 import top.dzhh.protocol.resp.RespError;
-import top.dzhh.redis.core.RedisCore;
+import top.dzhh.redis.core.RedisDb;
 
 /**
  * @author dongzhonghua
@@ -32,8 +32,8 @@ public class Lindex implements RedisCommand {
     }
 
     @Override
-    public void handle(ChannelHandlerContext ctx, RedisCore redisCore, RedisCommand command) {
-        RedisData redisData = redisCore.get(key);
+    public void handle(ChannelHandlerContext ctx, RedisDb redisDb, RedisCommand command) {
+        RedisData redisData = redisDb.get(key);
         if (redisData == null) {
             ctx.writeAndFlush(RespBulkString.NULL_BULK_STRING);
         } else if (redisData instanceof RedisList) {

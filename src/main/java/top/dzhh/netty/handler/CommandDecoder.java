@@ -6,6 +6,8 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import lombok.extern.slf4j.Slf4j;
 import top.dzhh.commamd.CommandFactory;
 import top.dzhh.commamd.RedisCommand;
+import top.dzhh.model.RedisClient;
+import top.dzhh.model.RedisServer;
 import top.dzhh.protocol.Resp;
 import top.dzhh.protocol.RespCodecFactory;
 import top.dzhh.protocol.resp.RespArray;
@@ -28,6 +30,12 @@ public class CommandDecoder extends LengthFieldBasedFrameDecoder {
     @Override
     protected Object decode(ChannelHandlerContext ctx, ByteBuf in) {
         log.info("--------command decoder-------------");
+
+        RedisClient client = RedisServer.getClientByChannel(ctx.channel());
+        boolean b = client.getBuf() == in;
+
+
+
         if (in.readableBytes() <= 0) {
             return null;
         }

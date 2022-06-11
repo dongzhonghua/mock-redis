@@ -8,13 +8,12 @@ import lombok.extern.slf4j.Slf4j;
 import top.dzhh.commamd.CommandType;
 import top.dzhh.commamd.RedisCommand;
 import top.dzhh.datatype.RedisData;
-import top.dzhh.datatype.RedisHash;
 import top.dzhh.datatype.RedisList;
 import top.dzhh.protocol.Resp;
 import top.dzhh.protocol.resp.RespBulkString;
 import top.dzhh.protocol.resp.RespError;
 import top.dzhh.protocol.resp.RespInteger;
-import top.dzhh.redis.core.RedisCore;
+import top.dzhh.redis.core.RedisDb;
 
 /**
  * @author dongzhonghua
@@ -41,16 +40,16 @@ public class Lpush implements RedisCommand {
     }
 
     @Override
-    public void handle(ChannelHandlerContext ctx, RedisCore redisCore, RedisCommand command) {
-        RedisData redisData = redisCore.get(key);
+    public void handle(ChannelHandlerContext ctx, RedisDb redisDb, RedisCommand command) {
+        RedisData redisData = redisDb.get(key);
         if (redisData == null) {
             RedisList redisList = new RedisList();
             int size = redisList.lpush(fields);
-            redisCore.put(key, redisList);
+            redisDb.put(key, redisList);
             ctx.writeAndFlush(new RespInteger<Long>((long) size));
         } else if (redisData instanceof RedisList) {
             int size = ((RedisList) redisData).lpush(fields);
-            redisCore.put(key, redisData);
+            redisDb.put(key, redisData);
             ctx.writeAndFlush(new RespInteger<Long>((long) size));
         } else {
             ctx.writeAndFlush(new RespError<String>("not list"));

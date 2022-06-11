@@ -11,29 +11,29 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import lombok.extern.slf4j.Slf4j;
+import top.dzhh.netty.handler.ClientHandler;
 import top.dzhh.netty.handler.CommandDecoder;
 import top.dzhh.netty.handler.CommandHandler;
 import top.dzhh.netty.handler.ResponseEncoder;
-import top.dzhh.redis.core.RedisCore;
-import top.dzhh.redis.core.RedisCoreImpl;
+import top.dzhh.redis.core.RedisDb;
 
 /**
  * @author dongzhonghua
  * Created on 2021-11-24
  */
 @Slf4j
-public class RedisServer {
+public class RedisApplication {
     private final ServerBootstrap serverBootstrap = new ServerBootstrap();
     NioEventLoopGroup bossGroup = new NioEventLoopGroup();
     NioEventLoopGroup workerGroup = new NioEventLoopGroup();
-    private final RedisCore redisCore = new RedisCoreImpl();
+    private final RedisDb redisDb = new RedisDb();
 
-    public RedisServer() {
+    public RedisApplication() {
     }
 
 
     public static void main(String[] args) {
-        new RedisServer().start();
+        new RedisApplication().start();
     }
 
     public void start() {
@@ -49,9 +49,15 @@ public class RedisServer {
                     @Override
                     protected void initChannel(NioSocketChannel nioSocketChannel) {
                         ChannelPipeline channelPipeline = nioSocketChannel.pipeline();
+                        // resp编码器，返回结果
                         channelPipeline.addLast(new ResponseEncoder());
+                        // 处理客户端的链接和断开，管理客户端
+                        channelPipeline.addLast(new ClientHandler());
+                        // 命令解析处理器，原始信息转成命令和参数
                         channelPipeline.addLast(new CommandDecoder());
-                        channelPipeline.addLast(new CommandHandler(redisCore));
+                        // 处理不同的请求，针对数据库进行操作
+                        channelPipeline.addLast(new CommandHandler(redisDb));
+                        log.info(String.valueOf(channelPipeline.names()));
                     }
                 });
         try {

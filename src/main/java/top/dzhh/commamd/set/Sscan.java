@@ -6,7 +6,7 @@ import top.dzhh.commamd.CommandType;
 import top.dzhh.commamd.RedisCommand;
 import top.dzhh.protocol.Resp;
 import top.dzhh.protocol.resp.RespBulkString;
-import top.dzhh.redis.core.RedisCore;
+import top.dzhh.redis.core.RedisDb;
 
 /**
  * @author dongzhonghua
@@ -27,7 +27,7 @@ public class Sscan implements RedisCommand {
     }
 
     @Override
-    public void handle(ChannelHandlerContext ctx, RedisCore redisCore, RedisCommand command) {
+    public void handle(ChannelHandlerContext ctx, RedisDb redisDb, RedisCommand command) {
         // TODO: 2021/12/4 http://doc.redisfans.com/key/scan.html#scan 这个命令非常的麻烦，需要去找找Redis怎么实现的
 
     }

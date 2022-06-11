@@ -13,7 +13,7 @@ import top.dzhh.protocol.Resp;
 import top.dzhh.protocol.resp.RespBulkString;
 import top.dzhh.protocol.resp.RespError;
 import top.dzhh.protocol.resp.RespInteger;
-import top.dzhh.redis.core.RedisCore;
+import top.dzhh.redis.core.RedisDb;
 
 /**
  * @author dongzhonghua
@@ -40,16 +40,16 @@ public class Rpush implements RedisCommand {
     }
 
     @Override
-    public void handle(ChannelHandlerContext ctx, RedisCore redisCore, RedisCommand command) {
-        RedisData redisData = redisCore.get(key);
+    public void handle(ChannelHandlerContext ctx, RedisDb redisDb, RedisCommand command) {
+        RedisData redisData = redisDb.get(key);
         if (redisData == null) {
             RedisList redisList = new RedisList();
             int size = redisList.rpush(fields);
-            redisCore.put(key, redisList);
+            redisDb.put(key, redisList);
             ctx.writeAndFlush(new RespInteger<Long>((long) size));
         } else if (redisData instanceof RedisList) {
             int size = ((RedisList) redisData).rpush(fields);
-            redisCore.put(key, redisData);
+            redisDb.put(key, redisData);
             ctx.writeAndFlush(new RespInteger<Long>((long) size));
         } else {
             ctx.writeAndFlush(new RespError<String>("not list"));

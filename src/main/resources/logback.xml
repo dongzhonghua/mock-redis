@@ -85,7 +85,7 @@
 
     </appender>
 
-    <root level="debug">
+    <root level="info">
         <appender-ref ref="CONSOLE-LOG"/>
 <!--        <appender-ref ref="ERROR-LOG"/>-->
 <!--        <appender-ref ref="INFO-LOG"/>-->

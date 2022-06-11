@@ -9,15 +9,13 @@ import top.dzhh.datatype.RedisData;
  * @author dongzhonghua
  * Created on 2021-11-28
  */
-public class RedisCoreImpl implements RedisCore {
+public class RedisDb  {
     private Map<String, RedisData> map = new ConcurrentSkipListMap<>();
 
-    @Override
     public void put(String key, RedisData redisData) {
         map.put(key, redisData);
     }
 
-    @Override
     public RedisData get(String key) {
         RedisData redisData = map.get(key);
         if (redisData == null) {
@@ -33,7 +31,6 @@ public class RedisCoreImpl implements RedisCore {
         return redisData;
     }
 
-    @Override
     public boolean exist(String key) {
         return map.containsKey(key);
     }

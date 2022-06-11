@@ -9,7 +9,7 @@ import top.dzhh.commamd.RedisCommand;
 import top.dzhh.datatype.RedisString;
 import top.dzhh.protocol.Resp;
 import top.dzhh.protocol.resp.RespBulkString;
-import top.dzhh.redis.core.RedisCore;
+import top.dzhh.redis.core.RedisDb;
 
 /**
  * @author dongzhonghua
@@ -51,10 +51,10 @@ public class Set implements RedisCommand {
     }
 
     @Override
-    public void handle(ChannelHandlerContext ctx, RedisCore redisCore, RedisCommand command) {
-        if (notExist && redisCore.exist(key)) {
+    public void handle(ChannelHandlerContext ctx, RedisDb redisDb, RedisCommand command) {
+        if (notExist && redisDb.exist(key)) {
             ctx.writeAndFlush(NULL_BULK_STRING);
-        } else if (exist && !redisCore.exist(key)) {
+        } else if (exist && !redisDb.exist(key)) {
             ctx.writeAndFlush(NULL_BULK_STRING);
         } else {
             RedisString redisString = new RedisString(value);
@@ -62,7 +62,7 @@ public class Set implements RedisCommand {
                 timeout += System.currentTimeMillis();
                 redisString.setTimeout(timeout);
             }
-            redisCore.put(key, redisString);
+            redisDb.put(key, redisString);
             ctx.writeAndFlush(OK_SIMPLE_STRING);
         }
     }

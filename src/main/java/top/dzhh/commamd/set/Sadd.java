@@ -13,7 +13,7 @@ import top.dzhh.protocol.Resp;
 import top.dzhh.protocol.resp.RespBulkString;
 import top.dzhh.protocol.resp.RespError;
 import top.dzhh.protocol.resp.RespInteger;
-import top.dzhh.redis.core.RedisCore;
+import top.dzhh.redis.core.RedisDb;
 
 /**
  * @author dongzhonghua
@@ -40,16 +40,16 @@ public class Sadd implements RedisCommand {
     }
 
     @Override
-    public void handle(ChannelHandlerContext ctx, RedisCore redisCore, RedisCommand command) {
-        RedisData redisData = redisCore.get(key);
+    public void handle(ChannelHandlerContext ctx, RedisDb redisDb, RedisCommand command) {
+        RedisData redisData = redisDb.get(key);
         if (redisData == null) {
             RedisSet redisSet = new RedisSet();
             int size = redisSet.add(fields);
-            redisCore.put(key, redisSet);
+            redisDb.put(key, redisSet);
             ctx.writeAndFlush(new RespInteger<Long>((long) size));
         } else if (redisData instanceof RedisSet) {
             int size = ((RedisSet) redisData).add(fields);
-            redisCore.put(key, redisData);
+            redisDb.put(key, redisData);
             ctx.writeAndFlush(new RespInteger<Long>((long) size));
         } else {
             ctx.writeAndFlush(new RespError<String>("not set"));

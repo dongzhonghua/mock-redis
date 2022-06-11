@@ -2,7 +2,7 @@ package top.dzhh.commamd;
 
 import io.netty.channel.ChannelHandlerContext;
 import top.dzhh.protocol.Resp;
-import top.dzhh.redis.core.RedisCore;
+import top.dzhh.redis.core.RedisDb;
 
 /**
  * @author dongzhonghua
@@ -14,6 +14,6 @@ public interface RedisCommand {
 
     void setContent(Resp<?>[] array);
 
-    void handle(ChannelHandlerContext ctx, RedisCore redisCore, RedisCommand command);
+    void handle(ChannelHandlerContext ctx, RedisDb redisDb, RedisCommand command);
 
 }

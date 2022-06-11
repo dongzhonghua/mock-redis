@@ -9,7 +9,7 @@ import top.dzhh.datatype.RedisData;
 import top.dzhh.datatype.RedisString;
 import top.dzhh.protocol.Resp;
 import top.dzhh.protocol.resp.RespBulkString;
-import top.dzhh.redis.core.RedisCore;
+import top.dzhh.redis.core.RedisDb;
 
 /**
  * @author dongzhonghua
@@ -29,8 +29,8 @@ public class Get implements RedisCommand {
     }
 
     @Override
-    public void handle(ChannelHandlerContext ctx, RedisCore redisCore, RedisCommand command) {
-        RedisData redisData = redisCore.get(key);
+    public void handle(ChannelHandlerContext ctx, RedisDb redisDb, RedisCommand command) {
+        RedisData redisData = redisDb.get(key);
         if (redisData == null) {
             ctx.writeAndFlush(NULL_BULK_STRING);
             ctx.close();

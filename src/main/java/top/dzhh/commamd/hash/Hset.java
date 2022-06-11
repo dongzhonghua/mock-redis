@@ -14,7 +14,7 @@ import top.dzhh.protocol.Resp;
 import top.dzhh.protocol.resp.RespBulkString;
 import top.dzhh.protocol.resp.RespError;
 import top.dzhh.protocol.resp.RespInteger;
-import top.dzhh.redis.core.RedisCore;
+import top.dzhh.redis.core.RedisDb;
 
 /**
  * @author dongzhonghua
@@ -42,17 +42,17 @@ public class Hset implements RedisCommand {
     }
 
     @Override
-    public void handle(ChannelHandlerContext ctx, RedisCore redisCore, RedisCommand command) {
-        RedisData redisData = redisCore.get(key);
+    public void handle(ChannelHandlerContext ctx, RedisDb redisDb, RedisCommand command) {
+        RedisData redisData = redisDb.get(key);
         if (redisData == null) {
             RedisHash redisHash = new RedisHash();
             long count = fields.stream().map(f -> redisHash.put(f.getKey(), f.getValue())).mapToInt(a -> a).sum();
-            redisCore.put(key, redisHash);
+            redisDb.put(key, redisHash);
             ctx.writeAndFlush(new RespInteger<Long>(count));
         } else if (redisData instanceof RedisHash) {
             long count = fields.stream().map(f -> ((RedisHash) redisData).put(f.getKey(), f.getValue()))
                     .mapToInt(a -> a).sum();
-            redisCore.put(key, redisData);
+            redisDb.put(key, redisData);
             ctx.writeAndFlush(new RespInteger<Long>(count));
         } else {
             ctx.writeAndFlush(new RespError<String>("not hash"));

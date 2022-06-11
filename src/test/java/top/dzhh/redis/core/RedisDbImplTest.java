@@ -14,7 +14,7 @@ import top.dzhh.datatype.RedisString;
  * @author dongzhonghua
  * Created on 2021-11-30
  */
-class RedisCoreImplTest {
+class RedisDbImplTest {
 
     private Map<String, RedisData> map = new ConcurrentSkipListMap<>(Comparator.reverseOrder());
 

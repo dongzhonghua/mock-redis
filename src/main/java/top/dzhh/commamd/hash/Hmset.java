@@ -9,7 +9,7 @@ import top.dzhh.datatype.RedisHash;
 import top.dzhh.protocol.Resp;
 import top.dzhh.protocol.resp.RespError;
 import top.dzhh.protocol.resp.RespSimpleString;
-import top.dzhh.redis.core.RedisCore;
+import top.dzhh.redis.core.RedisDb;
 
 /**
  * @author dongzhonghua
@@ -29,16 +29,16 @@ public class Hmset extends Hset {
 
 
     @Override
-    public void handle(ChannelHandlerContext ctx, RedisCore redisCore, RedisCommand command) {
-        RedisData redisData = redisCore.get(key);
+    public void handle(ChannelHandlerContext ctx, RedisDb redisDb, RedisCommand command) {
+        RedisData redisData = redisDb.get(key);
         if (redisData == null) {
             RedisHash redisHash = new RedisHash();
             fields.stream().map(f -> redisHash.put(f.getKey(), f.getValue()));
-            redisCore.put(key, redisHash);
+            redisDb.put(key, redisHash);
             ctx.writeAndFlush(RespSimpleString.OK_SIMPLE_STRING);
         } else if (redisData instanceof RedisHash) {
             fields.stream().map(f -> ((RedisHash) redisData).put(f.getKey(), f.getValue()));
-            redisCore.put(key, redisData);
+            redisDb.put(key, redisData);
             ctx.writeAndFlush(RespSimpleString.OK_SIMPLE_STRING);
         } else {
             ctx.writeAndFlush(new RespError<String>("not hash"));

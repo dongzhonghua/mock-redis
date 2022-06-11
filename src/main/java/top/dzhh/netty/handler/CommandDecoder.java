@@ -2,12 +2,11 @@ package top.dzhh.netty.handler;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
 import top.dzhh.commamd.CommandFactory;
 import top.dzhh.commamd.RedisCommand;
 import top.dzhh.model.RedisClient;
-import top.dzhh.model.RedisServer;
 import top.dzhh.protocol.RespCodecFactory;
 import top.dzhh.protocol.RespData;
 import top.dzhh.protocol.resp.RespDataArray;
@@ -18,23 +17,16 @@ import top.dzhh.protocol.resp.RespDataError;
  * Created on 2021-11-24
  */
 @Slf4j
-public class CommandDecoder extends LengthFieldBasedFrameDecoder {
-    public CommandDecoder() {
-        this(Integer.MAX_VALUE, 0, 0);
-    }
+public class CommandDecoder extends SimpleChannelInboundHandler<RedisClient> {
 
-    public CommandDecoder(int maxFrameLength, int lengthFieldOffset, int lengthFieldLength) {
-        super(maxFrameLength, lengthFieldOffset, lengthFieldLength);
-    }
 
     @Override
-    protected Object decode(ChannelHandlerContext ctx, ByteBuf in) {
+    protected void channelRead0(ChannelHandlerContext ctx, RedisClient client) {
         log.info("--------command decoder-------------");
 
-        RedisClient client = RedisServer.getClientByChannel(ctx.channel());
-        in = client.getBuf();
+        ByteBuf in = client.getBuf();
         if (in.readableBytes() <= 0) {
-            return null;
+            ctx.fireChannelRead(null);
         }
         RespData<?> respData = RespCodecFactory.decode(in);
         log.info("命令和参数：{}", respData);
@@ -49,6 +41,7 @@ public class CommandDecoder extends LengthFieldBasedFrameDecoder {
                 ctx.writeAndFlush(new RespDataError<String>("unsupported command: " + (respArray).getValue()[0]));
             }
         }
-        return command;
+        client.setRedisCommand(command);
+        ctx.fireChannelRead(client);
     }
 }

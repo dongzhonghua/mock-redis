@@ -5,35 +5,35 @@ import java.nio.charset.StandardCharsets;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
-import top.dzhh.protocol.AbstractResp;
-import top.dzhh.protocol.Resp;
+import top.dzhh.protocol.AbstractRespData;
 import top.dzhh.protocol.RespConstants;
+import top.dzhh.protocol.RespData;
 
 /**
  * @author dongzhonghua
  * Created on 2021-11-25
  */
 @Slf4j
-public class RespInteger<T> extends AbstractResp<Long> {
+public class RespDataInteger<T> extends AbstractRespData<Long> {
 
-    public RespInteger(Long value) {
+    public RespDataInteger(Long value) {
         super.setValue(value);
     }
 
-    public RespInteger() {
+    public RespDataInteger() {
 
     }
 
     @Override
-    public Resp<Long> decode(ByteBuf buffer) {
+    public RespData<Long> decode(ByteBuf buffer) {
         return this.setValue(readInteger(buffer));
     }
 
     @Override
-    public void encode(ChannelHandlerContext channelHandlerContext, Resp<Long> resp, ByteBuf byteBuf) {
+    public void encode(ChannelHandlerContext channelHandlerContext, RespData<Long> respData, ByteBuf byteBuf) {
         try {
             byteBuf.writeByte(RespConstants.COLON_BYTE);
-            Long value = resp.getValue();
+            Long value = respData.getValue();
             log.info(String.valueOf(this.value));
             String content = String.valueOf(value);
             byteBuf.writeBytes(content.getBytes(StandardCharsets.UTF_8));

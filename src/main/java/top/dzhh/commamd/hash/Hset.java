@@ -10,10 +10,10 @@ import top.dzhh.commamd.CommandType;
 import top.dzhh.commamd.RedisCommand;
 import top.dzhh.datatype.RedisData;
 import top.dzhh.datatype.RedisHash;
-import top.dzhh.protocol.Resp;
-import top.dzhh.protocol.resp.RespBulkString;
-import top.dzhh.protocol.resp.RespError;
-import top.dzhh.protocol.resp.RespInteger;
+import top.dzhh.protocol.RespData;
+import top.dzhh.protocol.resp.RespDataBulkString;
+import top.dzhh.protocol.resp.RespDataError;
+import top.dzhh.protocol.resp.RespDataInteger;
 import top.dzhh.redis.core.RedisDb;
 
 /**
@@ -31,12 +31,12 @@ public class Hset implements RedisCommand {
     }
 
     @Override
-    public void setContent(Resp<?>[] array) {
-        this.key = ((RespBulkString<String>) array[1]).getValue();
+    public void setContent(RespData<?>[] array) {
+        this.key = ((RespDataBulkString<String>) array[1]).getValue();
         int index = 2;
         while (index < array.length && (array.length - index) % 2 == 0) {
-            String field = ((RespBulkString<String>) array[index++]).getValue();
-            String value = ((RespBulkString<String>) array[index++]).getValue();
+            String field = ((RespDataBulkString<String>) array[index++]).getValue();
+            String value = ((RespDataBulkString<String>) array[index++]).getValue();
             fields.add(new Pair<>(field, value));
         }
     }
@@ -48,14 +48,14 @@ public class Hset implements RedisCommand {
             RedisHash redisHash = new RedisHash();
             long count = fields.stream().map(f -> redisHash.put(f.getKey(), f.getValue())).mapToInt(a -> a).sum();
             redisDb.put(key, redisHash);
-            ctx.writeAndFlush(new RespInteger<Long>(count));
+            ctx.writeAndFlush(new RespDataInteger<Long>(count));
         } else if (redisData instanceof RedisHash) {
             long count = fields.stream().map(f -> ((RedisHash) redisData).put(f.getKey(), f.getValue()))
                     .mapToInt(a -> a).sum();
             redisDb.put(key, redisData);
-            ctx.writeAndFlush(new RespInteger<Long>(count));
+            ctx.writeAndFlush(new RespDataInteger<Long>(count));
         } else {
-            ctx.writeAndFlush(new RespError<String>("not hash"));
+            ctx.writeAndFlush(new RespDataError<String>("not hash"));
             log.error("type error");
         }
 

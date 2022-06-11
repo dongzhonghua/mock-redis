@@ -4,8 +4,8 @@ import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
 import top.dzhh.commamd.CommandType;
 import top.dzhh.commamd.RedisCommand;
-import top.dzhh.protocol.Resp;
-import top.dzhh.protocol.resp.RespBulkString;
+import top.dzhh.protocol.RespData;
+import top.dzhh.protocol.resp.RespDataBulkString;
 import top.dzhh.redis.core.RedisDb;
 
 /**
@@ -22,8 +22,8 @@ public class Sscan implements RedisCommand {
     }
 
     @Override
-    public void setContent(Resp<?>[] array) {
-        this.key = ((RespBulkString<String>) array[1]).getValue();
+    public void setContent(RespData<?>[] array) {
+        this.key = ((RespDataBulkString<String>) array[1]).getValue();
     }
 
     @Override

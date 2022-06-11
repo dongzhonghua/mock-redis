@@ -8,7 +8,7 @@ import io.netty.channel.ChannelHandlerContext;
  * Created on 2021-11-26
  */
 public interface RespCodec<T> {
-    Resp<T> decode(ByteBuf buffer);
+    RespData<T> decode(ByteBuf buffer);
 
-    void encode(ChannelHandlerContext channelHandlerContext, Resp<T> resp, ByteBuf byteBuf);
+    void encode(ChannelHandlerContext channelHandlerContext, RespData<T> respData, ByteBuf byteBuf);
 }

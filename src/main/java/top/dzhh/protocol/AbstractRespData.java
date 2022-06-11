@@ -9,11 +9,11 @@ import io.netty.util.ByteProcessor;
  * @author dongzhonghua
  * Created on 2021-11-25
  */
-public abstract class AbstractResp<T> extends Resp<T> implements RespCodec<T> {
+public abstract class AbstractRespData<T> extends RespData<T> implements RespCodec<T> {
 
-    public abstract Resp<T> decode(ByteBuf buffer);
+    public abstract RespData<T> decode(ByteBuf buffer);
 
-    public abstract void encode(ChannelHandlerContext channelHandlerContext, Resp<T> resp,
+    public abstract void encode(ChannelHandlerContext channelHandlerContext, RespData<T> respData,
             ByteBuf byteBuf);
 
 

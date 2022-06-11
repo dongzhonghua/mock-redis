@@ -6,9 +6,9 @@ import top.dzhh.commamd.CommandType;
 import top.dzhh.commamd.RedisCommand;
 import top.dzhh.datatype.RedisData;
 import top.dzhh.datatype.RedisList;
-import top.dzhh.protocol.Resp;
-import top.dzhh.protocol.resp.RespBulkString;
-import top.dzhh.protocol.resp.RespError;
+import top.dzhh.protocol.RespData;
+import top.dzhh.protocol.resp.RespDataBulkString;
+import top.dzhh.protocol.resp.RespDataError;
 import top.dzhh.redis.core.RedisDb;
 
 /**
@@ -26,21 +26,21 @@ public class Lindex implements RedisCommand {
     }
 
     @Override
-    public void setContent(Resp<?>[] array) {
-        this.key = ((RespBulkString<String>) array[1]).getValue();
-        this.index = Integer.parseInt(((RespBulkString<String>) array[2]).getValue());
+    public void setContent(RespData<?>[] array) {
+        this.key = ((RespDataBulkString<String>) array[1]).getValue();
+        this.index = Integer.parseInt(((RespDataBulkString<String>) array[2]).getValue());
     }
 
     @Override
     public void handle(ChannelHandlerContext ctx, RedisDb redisDb, RedisCommand command) {
         RedisData redisData = redisDb.get(key);
         if (redisData == null) {
-            ctx.writeAndFlush(RespBulkString.NULL_BULK_STRING);
+            ctx.writeAndFlush(RespDataBulkString.NULL_BULK_STRING);
         } else if (redisData instanceof RedisList) {
             String res = ((RedisList) redisData).get(index);
-            ctx.writeAndFlush(new RespBulkString<String>(res));
+            ctx.writeAndFlush(new RespDataBulkString<String>(res));
         } else {
-            ctx.writeAndFlush(new RespError<String>("not list"));
+            ctx.writeAndFlush(new RespDataError<String>("not list"));
             log.error("type error");
         }
     }

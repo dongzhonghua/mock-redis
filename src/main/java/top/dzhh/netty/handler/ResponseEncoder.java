@@ -4,16 +4,16 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 import lombok.extern.slf4j.Slf4j;
-import top.dzhh.protocol.AbstractResp;
+import top.dzhh.protocol.AbstractRespData;
 
 /**
  * @author dongzhonghua
  * Created on 2021-11-27
  */
 @Slf4j
-public class ResponseEncoder extends MessageToByteEncoder<AbstractResp<?>> {
+public class ResponseEncoder extends MessageToByteEncoder<AbstractRespData<?>> {
     @Override
-    protected void encode(ChannelHandlerContext channelHandlerContext, AbstractResp resp, ByteBuf byteBuf)
+    protected void encode(ChannelHandlerContext channelHandlerContext, AbstractRespData resp, ByteBuf byteBuf)
             throws Exception {
         log.info("--------response encoder------------");
         log.info("返回值：{}", resp);

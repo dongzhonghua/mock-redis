@@ -6,9 +6,9 @@ import java.util.function.Supplier;
 
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
-import top.dzhh.protocol.Resp;
-import top.dzhh.protocol.resp.RespArray;
-import top.dzhh.protocol.resp.RespBulkString;
+import top.dzhh.protocol.RespData;
+import top.dzhh.protocol.resp.RespDataArray;
+import top.dzhh.protocol.resp.RespDataBulkString;
 
 /**
  * @author dongzhonghua
@@ -30,9 +30,9 @@ public class CommandFactory {
      * @param ctx
      * @return redis命令处理器，需要把请求内容set进去
      */
-    public static RedisCommand getRespCommand(RespArray<Resp<?>[]> resp, ChannelHandlerContext ctx) {
-        Resp<?>[] array = resp.getValue();
-        String commandName = ((RespBulkString<String>) array[0]).getValue().toLowerCase();
+    public static RedisCommand getRespCommand(RespDataArray<RespData<?>[]> resp, ChannelHandlerContext ctx) {
+        RespData<?>[] array = resp.getValue();
+        String commandName = ((RespDataBulkString<String>) array[0]).getValue().toLowerCase();
         Supplier<RedisCommand> supplier = map.get(commandName);
         if (supplier == null) {
             log.info("不支持的命令：" + commandName);

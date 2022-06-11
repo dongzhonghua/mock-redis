@@ -8,12 +8,12 @@ import com.google.common.collect.Maps;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import lombok.extern.slf4j.Slf4j;
-import top.dzhh.protocol.resp.DefaultResp;
-import top.dzhh.protocol.resp.RespArray;
-import top.dzhh.protocol.resp.RespBulkString;
-import top.dzhh.protocol.resp.RespError;
-import top.dzhh.protocol.resp.RespInteger;
-import top.dzhh.protocol.resp.RespSimpleString;
+import top.dzhh.protocol.resp.DefaultRespData;
+import top.dzhh.protocol.resp.RespDataArray;
+import top.dzhh.protocol.resp.RespDataBulkString;
+import top.dzhh.protocol.resp.RespDataError;
+import top.dzhh.protocol.resp.RespDataInteger;
+import top.dzhh.protocol.resp.RespDataSimpleString;
 
 /**
  * @author dongzhonghua
@@ -22,19 +22,19 @@ import top.dzhh.protocol.resp.RespSimpleString;
 @Slf4j
 public class RespCodecFactory {
 
-    static final Map<RespType, Supplier<AbstractResp<?>>> DECODERS = Maps.newConcurrentMap();
-    private static final Supplier<AbstractResp<?>> DEFAULT_DECODER = DefaultResp::new;
+    static final Map<RespType, Supplier<AbstractRespData<?>>> DECODERS = Maps.newConcurrentMap();
+    private static final Supplier<AbstractRespData<?>> DEFAULT_DECODER = DefaultRespData::new;
 
     static {
-        DECODERS.put(RespType.SIMPLE_STRING, RespSimpleString::new);
-        DECODERS.put(RespType.ERROR, RespError::new);
-        DECODERS.put(RespType.INTEGER, RespInteger::new);
-        DECODERS.put(RespType.BULK_STRING, RespBulkString::new);
-        DECODERS.put(RespType.RESP_ARRAY, RespArray::new);
+        DECODERS.put(RespType.SIMPLE_STRING, RespDataSimpleString::new);
+        DECODERS.put(RespType.ERROR, RespDataError::new);
+        DECODERS.put(RespType.INTEGER, RespDataInteger::new);
+        DECODERS.put(RespType.BULK_STRING, RespDataBulkString::new);
+        DECODERS.put(RespType.RESP_ARRAY, RespDataArray::new);
     }
 
     // TODO: 2021/11/28 内联命令也应该实现成array的形式 http://redisdoc.com/topic/protocol.html
-    public static Resp<?> decode(ByteBuf buffer) {
+    public static RespData<?> decode(ByteBuf buffer) {
         return DECODERS.getOrDefault(determineReplyType(buffer), DEFAULT_DECODER).get().decode(buffer);
     }
 
@@ -78,7 +78,7 @@ public class RespCodecFactory {
         buffer.writeBytes(RespConstants.CRLF);
         buffer.writeBytes("bar".getBytes(RespConstants.UTF_8));
         buffer.writeBytes(RespConstants.CRLF);
-        Resp<?> decode = RespCodecFactory.decode(buffer);
+        RespData<?> decode = RespCodecFactory.decode(buffer);
         log.info(String.valueOf(decode));
     }
 }

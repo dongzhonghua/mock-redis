@@ -6,9 +6,9 @@ import top.dzhh.commamd.CommandType;
 import top.dzhh.commamd.RedisCommand;
 import top.dzhh.datatype.RedisData;
 import top.dzhh.datatype.RedisHash;
-import top.dzhh.protocol.Resp;
-import top.dzhh.protocol.resp.RespError;
-import top.dzhh.protocol.resp.RespSimpleString;
+import top.dzhh.protocol.RespData;
+import top.dzhh.protocol.resp.RespDataError;
+import top.dzhh.protocol.resp.RespDataSimpleString;
 import top.dzhh.redis.core.RedisDb;
 
 /**
@@ -23,7 +23,7 @@ public class Hmset extends Hset {
     }
 
     @Override
-    public void setContent(Resp<?>[] array) {
+    public void setContent(RespData<?>[] array) {
         super.setContent(array);
     }
 
@@ -35,13 +35,13 @@ public class Hmset extends Hset {
             RedisHash redisHash = new RedisHash();
             fields.stream().map(f -> redisHash.put(f.getKey(), f.getValue()));
             redisDb.put(key, redisHash);
-            ctx.writeAndFlush(RespSimpleString.OK_SIMPLE_STRING);
+            ctx.writeAndFlush(RespDataSimpleString.OK_SIMPLE_STRING);
         } else if (redisData instanceof RedisHash) {
             fields.stream().map(f -> ((RedisHash) redisData).put(f.getKey(), f.getValue()));
             redisDb.put(key, redisData);
-            ctx.writeAndFlush(RespSimpleString.OK_SIMPLE_STRING);
+            ctx.writeAndFlush(RespDataSimpleString.OK_SIMPLE_STRING);
         } else {
-            ctx.writeAndFlush(new RespError<String>("not hash"));
+            ctx.writeAndFlush(new RespDataError<String>("not hash"));
             log.error("type error");
         }
     }

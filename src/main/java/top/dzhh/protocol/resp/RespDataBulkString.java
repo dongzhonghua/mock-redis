@@ -5,28 +5,28 @@ import java.nio.charset.StandardCharsets;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
-import top.dzhh.protocol.AbstractResp;
-import top.dzhh.protocol.Resp;
+import top.dzhh.protocol.AbstractRespData;
 import top.dzhh.protocol.RespConstants;
+import top.dzhh.protocol.RespData;
 
 /**
  * @author dongzhonghua
  * Created on 2021-11-25
  */
 @Slf4j
-public class RespBulkString<T> extends AbstractResp<String> {
-    public static final RespBulkString<String> NULL_BULK_STRING = new RespBulkString<>(null);
+public class RespDataBulkString<T> extends AbstractRespData<String> {
+    public static final RespDataBulkString<String> NULL_BULK_STRING = new RespDataBulkString<>(null);
 
-    public RespBulkString(String value) {
+    public RespDataBulkString(String value) {
         super.setValue(value);
     }
 
-    public RespBulkString() {
+    public RespDataBulkString() {
 
     }
 
     @Override
-    public Resp<String> decode(ByteBuf buffer) {
+    public RespData<String> decode(ByteBuf buffer) {
         int endIndex = getEndIndex(buffer);
         if (-1 == endIndex) {
             return null;
@@ -50,9 +50,9 @@ public class RespBulkString<T> extends AbstractResp<String> {
     }
 
     @Override
-    public void encode(ChannelHandlerContext channelHandlerContext, Resp<String> resp, ByteBuf byteBuf) {
+    public void encode(ChannelHandlerContext channelHandlerContext, RespData<String> respData, ByteBuf byteBuf) {
         byteBuf.writeByte(RespConstants.DOLLAR_BYTE);
-        String value = resp.getValue();
+        String value = respData.getValue();
         if (value == null) {
             byteBuf.writeByte(RespConstants.MINUS_BYTE);
             byteBuf.writeByte('1');

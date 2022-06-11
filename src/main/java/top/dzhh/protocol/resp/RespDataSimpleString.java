@@ -5,37 +5,36 @@ import java.nio.charset.StandardCharsets;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
-import top.dzhh.protocol.AbstractResp;
-import top.dzhh.protocol.Resp;
+import top.dzhh.protocol.AbstractRespData;
 import top.dzhh.protocol.RespConstants;
+import top.dzhh.protocol.RespData;
 
 /**
  * @author dongzhonghua
  * Created on 2021-11-25
  */
 @Slf4j
-public class RespError<T> extends AbstractResp<String> {
+public class RespDataSimpleString<T> extends AbstractRespData<String> {
+    public static final RespDataSimpleString<String> OK_SIMPLE_STRING = new RespDataSimpleString<>("OK");
 
-    public RespError(String value) {
+    public RespDataSimpleString(String value) {
         super.setValue(value);
     }
 
-    public RespError() {
+    public RespDataSimpleString() {
 
     }
 
     @Override
-    public Resp<String> decode(ByteBuf buffer) {
+    public RespData<String> decode(ByteBuf buffer) {
         return this.setValue(readLine(buffer));
     }
 
     @Override
-    public void encode(ChannelHandlerContext channelHandlerContext, Resp<String> resp, ByteBuf byteBuf) {
+    public void encode(ChannelHandlerContext channelHandlerContext, RespData<String> respData, ByteBuf byteBuf) {
         try {
-            byteBuf.writeByte(RespConstants.MINUS_BYTE);
-            String value = resp.getValue();
-            log.info(value);
-            byteBuf.writeBytes(value.getBytes(StandardCharsets.UTF_8));
+            byteBuf.writeByte(RespConstants.PLUS_BYTE);
+            byteBuf.writeBytes(this.value.getBytes(StandardCharsets.UTF_8));
             byteBuf.writeBytes(RespConstants.CRLF);
         } catch (Exception e) {
             channelHandlerContext.close();

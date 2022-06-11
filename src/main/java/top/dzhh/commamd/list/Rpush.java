@@ -9,10 +9,10 @@ import top.dzhh.commamd.CommandType;
 import top.dzhh.commamd.RedisCommand;
 import top.dzhh.datatype.RedisData;
 import top.dzhh.datatype.RedisList;
-import top.dzhh.protocol.Resp;
-import top.dzhh.protocol.resp.RespBulkString;
-import top.dzhh.protocol.resp.RespError;
-import top.dzhh.protocol.resp.RespInteger;
+import top.dzhh.protocol.RespData;
+import top.dzhh.protocol.resp.RespDataBulkString;
+import top.dzhh.protocol.resp.RespDataError;
+import top.dzhh.protocol.resp.RespDataInteger;
 import top.dzhh.redis.core.RedisDb;
 
 /**
@@ -30,11 +30,11 @@ public class Rpush implements RedisCommand {
     }
 
     @Override
-    public void setContent(Resp<?>[] array) {
-        this.key = ((RespBulkString<String>) array[1]).getValue();
+    public void setContent(RespData<?>[] array) {
+        this.key = ((RespDataBulkString<String>) array[1]).getValue();
         int index = 2;
         while (index < array.length) {
-            String field = ((RespBulkString<String>) array[index++]).getValue();
+            String field = ((RespDataBulkString<String>) array[index++]).getValue();
             fields.add(field);
         }
     }
@@ -46,13 +46,13 @@ public class Rpush implements RedisCommand {
             RedisList redisList = new RedisList();
             int size = redisList.rpush(fields);
             redisDb.put(key, redisList);
-            ctx.writeAndFlush(new RespInteger<Long>((long) size));
+            ctx.writeAndFlush(new RespDataInteger<Long>((long) size));
         } else if (redisData instanceof RedisList) {
             int size = ((RedisList) redisData).rpush(fields);
             redisDb.put(key, redisData);
-            ctx.writeAndFlush(new RespInteger<Long>((long) size));
+            ctx.writeAndFlush(new RespDataInteger<Long>((long) size));
         } else {
-            ctx.writeAndFlush(new RespError<String>("not list"));
+            ctx.writeAndFlush(new RespDataError<String>("not list"));
             log.error("type error");
         }
 

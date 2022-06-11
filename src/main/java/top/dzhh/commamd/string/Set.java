@@ -1,14 +1,14 @@
 package top.dzhh.commamd.string;
 
-import static top.dzhh.protocol.resp.RespBulkString.NULL_BULK_STRING;
-import static top.dzhh.protocol.resp.RespSimpleString.OK_SIMPLE_STRING;
+import static top.dzhh.protocol.resp.RespDataBulkString.NULL_BULK_STRING;
+import static top.dzhh.protocol.resp.RespDataSimpleString.OK_SIMPLE_STRING;
 
 import io.netty.channel.ChannelHandlerContext;
 import top.dzhh.commamd.CommandType;
 import top.dzhh.commamd.RedisCommand;
 import top.dzhh.datatype.RedisString;
-import top.dzhh.protocol.Resp;
-import top.dzhh.protocol.resp.RespBulkString;
+import top.dzhh.protocol.RespData;
+import top.dzhh.protocol.resp.RespDataBulkString;
 import top.dzhh.redis.core.RedisDb;
 
 /**
@@ -28,18 +28,18 @@ public class Set implements RedisCommand {
     }
 
     @Override
-    public void setContent(Resp<?>[] array) {
-        this.key = ((RespBulkString<String>) array[1]).getValue();
-        this.value = ((RespBulkString<String>) array[2]).getValue();
+    public void setContent(RespData<?>[] array) {
+        this.key = ((RespDataBulkString<String>) array[1]).getValue();
+        this.value = ((RespDataBulkString<String>) array[2]).getValue();
         int index = 3;
         while (index < array.length) {
-            String value = ((RespBulkString<String>) array[index]).getValue();
+            String value = ((RespDataBulkString<String>) array[index]).getValue();
             index++;
             if (value.startsWith("EX")) {
-                String seconds = ((RespBulkString<String>) array[index]).getValue();
+                String seconds = ((RespDataBulkString<String>) array[index]).getValue();
                 timeout = Integer.parseInt(seconds) * 1000L;
             } else if (value.startsWith("PX")) {
-                String millisecond = ((RespBulkString<String>) array[index]).getValue();
+                String millisecond = ((RespDataBulkString<String>) array[index]).getValue();
                 timeout = Integer.parseInt(millisecond);
             } else if (value.equals("NX")) {
                 notExist = true;

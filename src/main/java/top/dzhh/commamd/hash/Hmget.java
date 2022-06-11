@@ -9,9 +9,9 @@ import top.dzhh.commamd.CommandType;
 import top.dzhh.commamd.RedisCommand;
 import top.dzhh.datatype.RedisData;
 import top.dzhh.datatype.RedisHash;
-import top.dzhh.protocol.Resp;
-import top.dzhh.protocol.resp.RespArray;
-import top.dzhh.protocol.resp.RespBulkString;
+import top.dzhh.protocol.RespData;
+import top.dzhh.protocol.resp.RespDataArray;
+import top.dzhh.protocol.resp.RespDataBulkString;
 import top.dzhh.redis.core.RedisDb;
 
 /**
@@ -29,11 +29,11 @@ public class Hmget implements RedisCommand {
     }
 
     @Override
-    public void setContent(Resp<?>[] array) {
-        this.key = ((RespBulkString<String>) array[1]).getValue();
+    public void setContent(RespData<?>[] array) {
+        this.key = ((RespDataBulkString<String>) array[1]).getValue();
         int index = 2;
         while (index < array.length) {
-            String field = ((RespBulkString<String>) array[index++]).getValue();
+            String field = ((RespDataBulkString<String>) array[index++]).getValue();
             fields.add(field);
         }
     }
@@ -42,13 +42,13 @@ public class Hmget implements RedisCommand {
     public void handle(ChannelHandlerContext ctx, RedisDb redisDb, RedisCommand command) {
         RedisData redisData = redisDb.get(key);
         if (redisData == null) {
-            ctx.writeAndFlush(RespBulkString.NULL_BULK_STRING);
+            ctx.writeAndFlush(RespDataBulkString.NULL_BULK_STRING);
             return;
         }
-        RespBulkString<String>[] res =new RespBulkString[fields.size()];
+        RespDataBulkString<String>[] res =new RespDataBulkString[fields.size()];
         for (int i = 0; i < fields.size(); i++) {
-            res[i] = new RespBulkString<>(((RedisHash) redisData).get(fields.get(i)));
+            res[i] = new RespDataBulkString<>(((RedisHash) redisData).get(fields.get(i)));
         }
-        ctx.writeAndFlush(new RespArray<>(res));
+        ctx.writeAndFlush(new RespDataArray<>(res));
     }
 }

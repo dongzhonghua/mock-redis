@@ -6,29 +6,29 @@ import java.util.Arrays;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
-import top.dzhh.protocol.AbstractResp;
-import top.dzhh.protocol.Resp;
+import top.dzhh.protocol.AbstractRespData;
 import top.dzhh.protocol.RespCodec;
 import top.dzhh.protocol.RespCodecFactory;
 import top.dzhh.protocol.RespConstants;
+import top.dzhh.protocol.RespData;
 
 /**
  * @author dongzhonghua
  * Created on 2021-11-25
  */
 @Slf4j
-public class RespArray<T> extends AbstractResp<Resp<?>[]> {
+public class RespDataArray<T> extends AbstractRespData<RespData<?>[]> {
 
-    public RespArray(Resp<?>[] array) {
+    public RespDataArray(RespData<?>[] array) {
         super.setValue(array);
     }
 
-    public RespArray() {
+    public RespDataArray() {
 
     }
 
     @Override
-    public Resp<Resp<?>[]> decode(ByteBuf buffer) {
+    public RespData<RespData<?>[]> decode(ByteBuf buffer) {
         int endIndex = getEndIndex(buffer);
         if (-1 == endIndex) {
             return null;
@@ -41,9 +41,9 @@ public class RespArray<T> extends AbstractResp<Resp<?>[]> {
         }
         // Array Empty List
         if (RespConstants.ZERO.equals(len)) {
-            return this.setValue(new Resp[0]);
+            return this.setValue(new RespData[0]);
         }
-        Resp<?>[] res = new Resp[Math.toIntExact(len)];
+        RespData<?>[] res = new RespData[Math.toIntExact(len)];
         for (int i = 0; i < len; i++) {
             res[i] = RespCodecFactory.decode(buffer);
         }
@@ -51,12 +51,12 @@ public class RespArray<T> extends AbstractResp<Resp<?>[]> {
     }
 
     @Override
-    public void encode(ChannelHandlerContext channelHandlerContext, Resp<Resp<?>[]> resp, ByteBuf byteBuf) {
+    public void encode(ChannelHandlerContext channelHandlerContext, RespData<RespData<?>[]> respData, ByteBuf byteBuf) {
         byteBuf.writeByte(RespConstants.ASTERISK_BYTE);
-        Resp<?>[] array = resp.getValue();
+        RespData<?>[] array = respData.getValue();
         byteBuf.writeBytes(String.valueOf(array.length).getBytes(StandardCharsets.UTF_8));
         byteBuf.writeBytes(RespConstants.CRLF);
-        for (Resp<?> each : array) {
+        for (RespData<?> each : array) {
             ((RespCodec) each).encode(channelHandlerContext, each, byteBuf);
         }
     }

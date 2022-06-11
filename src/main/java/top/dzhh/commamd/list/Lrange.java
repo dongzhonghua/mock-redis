@@ -8,10 +8,10 @@ import top.dzhh.commamd.CommandType;
 import top.dzhh.commamd.RedisCommand;
 import top.dzhh.datatype.RedisData;
 import top.dzhh.datatype.RedisList;
-import top.dzhh.protocol.Resp;
-import top.dzhh.protocol.resp.RespArray;
-import top.dzhh.protocol.resp.RespBulkString;
-import top.dzhh.protocol.resp.RespError;
+import top.dzhh.protocol.RespData;
+import top.dzhh.protocol.resp.RespDataArray;
+import top.dzhh.protocol.resp.RespDataBulkString;
+import top.dzhh.protocol.resp.RespDataError;
 import top.dzhh.redis.core.RedisDb;
 
 /**
@@ -30,26 +30,26 @@ public class Lrange implements RedisCommand {
     }
 
     @Override
-    public void setContent(Resp<?>[] array) {
-        this.key = ((RespBulkString<String>) array[1]).getValue();
-        this.start = Integer.parseInt(((RespBulkString<String>) array[2]).getValue());
-        this.stop = Integer.parseInt(((RespBulkString<String>) array[3]).getValue());
+    public void setContent(RespData<?>[] array) {
+        this.key = ((RespDataBulkString<String>) array[1]).getValue();
+        this.start = Integer.parseInt(((RespDataBulkString<String>) array[2]).getValue());
+        this.stop = Integer.parseInt(((RespDataBulkString<String>) array[3]).getValue());
     }
 
     @Override
     public void handle(ChannelHandlerContext ctx, RedisDb redisDb, RedisCommand command) {
         RedisData redisData = redisDb.get(key);
         if (redisData == null) {
-            ctx.writeAndFlush(RespBulkString.NULL_BULK_STRING);
+            ctx.writeAndFlush(RespDataBulkString.NULL_BULK_STRING);
         } else if (redisData instanceof RedisList) {
             List<String> res = ((RedisList) redisData).lrang(start, stop);
-            RespBulkString<String>[] result = new RespBulkString[res.size()];
+            RespDataBulkString<String>[] result = new RespDataBulkString[res.size()];
             for (int i = 0; i < res.size(); i++) {
-                result[i] = new RespBulkString<>(res.get(i));
+                result[i] = new RespDataBulkString<>(res.get(i));
             }
-            ctx.writeAndFlush(new RespArray<>(result));
+            ctx.writeAndFlush(new RespDataArray<>(result));
         } else {
-            ctx.writeAndFlush(new RespError<String>("not list"));
+            ctx.writeAndFlush(new RespDataError<String>("not list"));
             log.error("type error");
         }
     }
